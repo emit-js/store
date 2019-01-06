@@ -58,7 +58,7 @@ function set(o) {
           state: state,
         })
       )
-      .then(Promise.resolve(o))
+      .then(o)
   }
 
   return queue
