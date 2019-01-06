@@ -42,7 +42,7 @@ function set(o) {
   if (fn) {
     queue = queue.then(function() {
       var opts = fn(o)
-      setQueue.call({
+      setter.call({
         opts: opts,
         prop: prop,
         state: state,
@@ -52,7 +52,7 @@ function set(o) {
   } else {
     queue = queue
       .then(
-        setQueue.bind({
+        setter.bind({
           opts: opts,
           prop: prop,
           state: state,
@@ -64,7 +64,7 @@ function set(o) {
   return queue
 }
 
-function setQueue() {
+function setter() {
   var opts = this.opts,
     prop = this.prop,
     state = this.state
