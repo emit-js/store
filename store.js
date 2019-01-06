@@ -25,10 +25,12 @@ module.exports = function store(dot, opts) {
 }
 
 function get(o) {
-  var props = o.props,
+  var opts = o.opts,
+    props = o.props,
     sig = o.sig
 
   if (props) {
+    props = opts ? props.concat([opts]) : props
     sig.value = dotProp.get(this.store, props)
   } else {
     sig.value = this.store

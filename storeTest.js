@@ -8,6 +8,11 @@ beforeEach(function() {
   store(dot)
 })
 
+test("get", function() {
+  dot.state.store = { a: { b: true } }
+  expect(dot("get", "a", "b")).toBe(true)
+})
+
 test("delete", function() {
   return dot("set.a.b.c", true)
     .then(function() {
