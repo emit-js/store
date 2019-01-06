@@ -14,19 +14,21 @@ module.exports = function store(dot, opts) {
 
   dot.state.store = opts.state || {}
 
+  var boundSet = set.bind(dot.state)
+
   dot.onAny("before.get", get.bind(dot.state))
-  dot.onAny("set", set.bind(dot.state))
+  dot.onAny("delete", boundSet)
+  dot.onAny("merge", boundSet)
+  dot.onAny("set", boundSet)
 
   return dot
 }
 
 function get(o) {
-  var prop = o.prop,
+  var props = o.props,
     sig = o.sig
 
-  var props = dotProp.propToArray(prop).slice(1)
-
-  if (prop) {
+  if (props) {
     sig.value = dotProp.get(this.store, props)
   } else {
     sig.value = this.store
@@ -35,29 +37,18 @@ function get(o) {
 
 function set(o) {
   var fn = o.fn,
-    opts = o.opts,
-    prop = o.prop,
-    state = this
+    s = this
 
   if (fn) {
     queue = queue.then(function() {
-      var opts = fn(o)
-      setter.call({
-        opts: opts,
-        prop: prop,
-        state: state,
-      })
+      var v = fn(o)
+      setter.call({ o: o, s: s, v: v })
       return o
     })
   } else {
+    var v = o.opts
     queue = queue
-      .then(
-        setter.bind({
-          opts: opts,
-          prop: prop,
-          state: state,
-        })
-      )
+      .then(setter.bind({ o: o, s: s, v: v }))
       .then(o)
   }
 
@@ -65,11 +56,20 @@ function set(o) {
 }
 
 function setter() {
-  var opts = this.opts,
-    prop = this.prop,
-    state = this.state
+  var ns = this.o.ns,
+    p = this.o.props,
+    s = this.s,
+    v = this.v
 
-  var props = dotProp.propToArray(prop).slice(1)
+  if (ns === "delete") {
+    s.store = dotProp.delete(s.store, p)
+  }
 
-  state.store = dotProp.set(state.store, props, opts)
+  if (ns === "merge") {
+    s.store = dotProp.merge(s.store, p, v)
+  }
+
+  if (ns === "set") {
+    s.store = dotProp.set(s.store, p, v)
+  }
 }

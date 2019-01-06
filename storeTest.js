@@ -8,10 +8,28 @@ beforeEach(function() {
   store(dot)
 })
 
-test("get/set", function() {
+test("merge & get", function() {
+  return dot("merge.a", { b: { c: true } }).then(
+    function() {
+      expect(dot("get.a.b.c")).toBe(true)
+    }
+  )
+})
+
+test("set & get", function() {
   return dot("set.a.b.c", true).then(function() {
     expect(dot("get.a.b.c")).toBe(true)
   })
+})
+
+test("set & delete", function() {
+  return dot("set.a.b.c", true)
+    .then(function() {
+      return dot("delete.a.b")
+    })
+    .then(function() {
+      expect(dot.state.store).toEqual({ a: {} })
+    })
 })
 
 test("queue", function() {
