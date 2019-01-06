@@ -42,14 +42,11 @@ function set(o) {
   if (fn) {
     queue = queue.then(function() {
       var v = fn(o)
-      setter.call({ o: o, s: s, v: v })
-      return o
+      return setter.call({ o: o, s: s, v: v })
     })
   } else {
     var v = o.opts
-    queue = queue
-      .then(setter.bind({ o: o, s: s, v: v }))
-      .then(o)
+    queue = queue.then(setter.bind({ o: o, s: s, v: v }))
   }
 
   return queue
@@ -72,4 +69,6 @@ function setter() {
   if (ns === "set") {
     s.store = dotProp.set(s.store, p, v)
   }
+
+  return this.o
 }

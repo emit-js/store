@@ -8,21 +8,7 @@ beforeEach(function() {
   store(dot)
 })
 
-test("merge & get", function() {
-  return dot("merge.a", { b: { c: true } }).then(
-    function() {
-      expect(dot("get.a.b.c")).toBe(true)
-    }
-  )
-})
-
-test("set & get", function() {
-  return dot("set.a.b.c", true).then(function() {
-    expect(dot("get.a.b.c")).toBe(true)
-  })
-})
-
-test("set & delete", function() {
+test("delete", function() {
   return dot("set.a.b.c", true)
     .then(function() {
       return dot("delete.a.b")
@@ -30,6 +16,14 @@ test("set & delete", function() {
     .then(function() {
       expect(dot.state.store).toEqual({ a: {} })
     })
+})
+
+test("merge", function() {
+  return dot("merge.a", { b: { c: true } }).then(
+    function() {
+      expect(dot("get.a.b.c")).toBe(true)
+    }
+  )
 })
 
 test("queue", function() {
@@ -42,4 +36,10 @@ test("queue", function() {
     .then(function() {
       expect(dot("get.a.b.c")).toBe("hello world")
     })
+})
+
+test("set", function() {
+  return dot("set.a.b.c", true).then(function() {
+    expect(dot("get.a.b.c")).toBe(true)
+  })
 })
