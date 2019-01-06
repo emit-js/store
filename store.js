@@ -1,18 +1,18 @@
+/*global Promise*/
 /*prettier-ignore*/
 "use strict";
 
 var dotProp = require("@dot-store/dot-prop-immutable")
+var queue = Promise.resolve()
 
-module.exports = function store(dot, options) {
-  options = options || {}
-
-  var state = options.state || {}
+module.exports = function store(dot, opts) {
+  opts = opts || {}
 
   if (dot.state.store) {
-    return options
+    return dot
   }
 
-  dot.state.store = state
+  dot.state.store = opts.state || {}
 
   dot.onAny("before.get", get.bind(dot.state))
   dot.onAny("set", set.bind(dot.state))
@@ -34,10 +34,29 @@ function get(o) {
 }
 
 function set(o) {
-  var opts = o.opts,
+  var fn = o.fn,
+    opts = o.opts,
     prop = o.prop
+
+  if (fn) {
+    queue = queue.then(fn)
+  } else {
+    queue = queue.then(
+      setQueue.bind({ opts: opts, prop: prop, state: this })
+    )
+  }
+
+  return queue.then(function() {
+    return o
+  })
+}
+
+function setQueue() {
+  var opts = this.opts,
+    prop = this.prop,
+    state = this.state
 
   var props = dotProp.propToArray(prop).slice(1)
 
-  this.store = dotProp.set(this.store, props, opts)
+  state.store = dotProp.set(state.store, props, opts)
 }
