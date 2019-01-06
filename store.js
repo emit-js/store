@@ -2,8 +2,8 @@
 /*prettier-ignore*/
 "use strict";
 
-var dotProp = require("@dot-store/dot-prop-immutable")
-var queue = Promise.resolve()
+var dotProp = require("@dot-store/dot-prop-immutable"),
+  queue = Promise.resolve()
 
 module.exports = function store(dot, opts) {
   opts = opts || {}
@@ -36,19 +36,32 @@ function get(o) {
 function set(o) {
   var fn = o.fn,
     opts = o.opts,
-    prop = o.prop
+    prop = o.prop,
+    state = this
 
   if (fn) {
-    queue = queue.then(fn)
+    queue = queue.then(function() {
+      var opts = fn(o)
+      setQueue.call({
+        opts: opts,
+        prop: prop,
+        state: state,
+      })
+      return o
+    })
   } else {
-    queue = queue.then(
-      setQueue.bind({ opts: opts, prop: prop, state: this })
-    )
+    queue = queue
+      .then(
+        setQueue.bind({
+          opts: opts,
+          prop: prop,
+          state: state,
+        })
+      )
+      .then(Promise.resolve(o))
   }
 
-  return queue.then(function() {
-    return o
-  })
+  return queue
 }
 
 function setQueue() {
