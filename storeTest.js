@@ -48,3 +48,20 @@ test("set", function() {
     expect(dot("get.a.b.c")).toBe(true)
   })
 })
+
+test("store", function() {
+  expect.assertions(1)
+
+  dot.on("store.a.b.c", function(o) {
+    expect(o).toEqual({
+      dot: expect.anything(),
+      ns: "store",
+      opts: true,
+      prop: "a.b.c",
+      props: ["a", "b", "c"],
+      sig: {},
+    })
+  })
+
+  return dot("set.a.b.c", true)
+})

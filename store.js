@@ -3,6 +3,8 @@
 "use strict";
 
 var dotProp = require("./dotPropImmutable"),
+  empty = "",
+  period = ".",
   queue = Promise.resolve()
 
 module.exports = function store(dot, opts) {
@@ -26,12 +28,13 @@ module.exports = function store(dot, opts) {
 
 function get(o) {
   var opts = o.opts,
-    props = o.props,
+    prop = o.prop,
     sig = o.sig
 
-  if (props) {
-    props = opts ? props.concat([opts]) : props
-    sig.value = dotProp.get(this.store, props) || null
+  prop = opts ? prop + (prop ? period : empty) + opts : prop
+
+  if (prop) {
+    sig.value = dotProp.get(this.store, prop) || null
   } else {
     sig.value = this.store
   }
@@ -55,22 +58,24 @@ function set(o) {
 }
 
 function setter() {
-  var ns = this.o.ns,
-    p = this.o.props,
+  var dot = this.o.dot,
+    ns = this.o.ns,
+    prop = this.o.prop,
+    props = this.o.props,
     s = this.s,
     v = this.v
 
   if (ns === "delete") {
-    s.store = dotProp.delete(s.store, p)
+    s.store = dotProp.delete(s.store, props)
   }
 
   if (ns === "merge") {
-    s.store = dotProp.merge(s.store, p, v)
+    s.store = dotProp.merge(s.store, props, v)
   }
 
   if (ns === "set") {
-    s.store = dotProp.set(s.store, p, v)
+    s.store = dotProp.set(s.store, props, v)
   }
 
-  return this.o
+  return dot("store", prop, dot("get", prop)).then(this.o)
 }

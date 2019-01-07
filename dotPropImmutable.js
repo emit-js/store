@@ -162,7 +162,7 @@ function propToArray(prop) {
     return prop
   }
 
-  return prop.toString().split(".")
+  return prop.split(".")
 }
 
 module.exports = {
