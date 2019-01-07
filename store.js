@@ -2,7 +2,7 @@
 /*prettier-ignore*/
 "use strict";
 
-var dotProp = require("@dot-store/dot-prop-immutable"),
+var dotProp = require("./dotPropImmutable"),
   queue = Promise.resolve()
 
 module.exports = function store(dot, opts) {

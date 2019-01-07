@@ -21,9 +21,6 @@
     "pretty": "prettier --write **/*.css **/*.json **/*.md",
     "test": "jest"
   },
-  "dependencies": {
-    "@dot-store/dot-prop-immutable": "3.1.0"
-  },
   "devDependencies": {
     "dot-event": "next",
     "eslint": "5.9.0",
