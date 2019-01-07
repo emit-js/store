@@ -31,7 +31,7 @@ function get(o) {
 
   if (props) {
     props = opts ? props.concat([opts]) : props
-    sig.value = dotProp.get(this.store, props)
+    sig.value = dotProp.get(this.store, props) || null
   } else {
     sig.value = this.store
   }
