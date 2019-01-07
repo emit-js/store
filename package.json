@@ -1,6 +1,6 @@
 {
   "name": "@dot-event/store",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "dot-event store",
   "keywords": [
     "event",
@@ -14,7 +14,7 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/dot-event/store#readme",
-  "main": "dot.js",
+  "main": "store.js",
   "scripts": {
     "fix": "npm run lint -- --fix",
     "lint": "eslint --ignore-path .gitignore --ext=js .",
@@ -25,7 +25,7 @@
     "@dot-store/dot-prop-immutable": "3.1.0"
   },
   "devDependencies": {
-    "dot-event": "^3.0.3",
+    "dot-event": "next",
     "eslint": "5.9.0",
     "eslint-config-prettier": "3.3.0",
     "eslint-plugin-prettier": "3.0.0",
