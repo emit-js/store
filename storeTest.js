@@ -11,6 +11,7 @@ beforeEach(function() {
 test("get", function() {
   dot.state.store = { a: { b: true } }
   expect(dot("get", "a", "b")).toBe(true)
+  expect(dot.get("a", "b")).toBe(true)
 })
 
 test("delete", function() {
@@ -44,8 +45,8 @@ test("queue", function() {
 })
 
 test("set", function() {
-  return dot("set.a.b.c", true).then(function() {
-    expect(dot("get.a.b.c")).toBe(true)
+  return dot.set("a.b.c", true).then(function() {
+    expect(dot.get("a.b.c")).toBe(true)
   })
 })
 
@@ -62,5 +63,5 @@ test("store", function() {
     })
   })
 
-  return dot("set.a.b.c", true)
+  return dot.set("a.b.c", true)
 })
