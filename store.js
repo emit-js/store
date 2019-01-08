@@ -3,8 +3,6 @@
 "use strict";
 
 var dotProp = require("./dotPropImmutable"),
-  empty = "",
-  period = ".",
   queue = Promise.resolve()
 
 module.exports = function store(dot, opts) {
@@ -26,31 +24,30 @@ module.exports = function store(dot, opts) {
   return dot
 }
 
-function get(o) {
-  var opts = o.opts,
-    prop = o.prop,
-    sig = o.sig
+function get(o, sig) {
+  var opt = o.opt,
+    propArr = o.propArr
 
-  prop = opts ? prop + (prop ? period : empty) + opts : prop
+  propArr = opt ? propArr.concat(opt.split(".")) : propArr
 
-  if (prop) {
-    sig.value = dotProp.get(this.store, prop) || null
+  if (propArr) {
+    sig.value = dotProp.get(this.store, propArr) || null
   } else {
     sig.value = this.store
   }
 }
 
 function set(o) {
-  var fn = o.fn,
+  var opt = o.opt,
     s = this
 
-  if (fn) {
+  if (typeof opt === "function") {
     queue = queue.then(function() {
-      var v = fn(o)
+      var v = opt(o)
       return setter.call({ o: o, s: s, v: v })
     })
   } else {
-    var v = o.opts
+    var v = o.opt
     queue = queue.then(setter.bind({ o: o, s: s, v: v }))
   }
 
@@ -61,21 +58,21 @@ function setter() {
   var dot = this.o.dot,
     ns = this.o.ns,
     prop = this.o.prop,
-    props = this.o.props,
+    propArr = this.o.propArr,
     s = this.s,
     v = this.v
 
   if (ns === "delete") {
-    s.store = dotProp.delete(s.store, props)
+    s.store = dotProp.delete(s.store, propArr)
   }
 
   if (ns === "merge") {
-    s.store = dotProp.merge(s.store, props, v)
+    s.store = dotProp.merge(s.store, propArr, v)
   }
 
   if (ns === "set") {
-    s.store = dotProp.set(s.store, props, v)
+    s.store = dotProp.set(s.store, propArr, v)
   }
 
-  return dot("store", prop, dot("get", prop)).then(this.o)
+  return dot("store", prop, v).then(this.o)
 }
