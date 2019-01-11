@@ -15,9 +15,10 @@ test("get", function() {
 })
 
 test("delete", function() {
-  return dot("set.a.b.c", true)
+  return dot
+    .set("a.b.c", true)
     .then(function() {
-      return dot("delete.a.b")
+      return dot.delete("a.b")
     })
     .then(function() {
       expect(dot.state.store).toEqual({ a: {} })
@@ -27,7 +28,7 @@ test("delete", function() {
 test("merge", function() {
   return dot("merge.a", { b: { c: true } }).then(
     function() {
-      expect(dot("get.a.b.c")).toBe(true)
+      expect(dot("get", "a.b.c")).toBe(true)
     }
   )
 })
@@ -35,12 +36,12 @@ test("merge", function() {
 test("queue", function() {
   return dot("set.a.b.c", "hello")
     .then(function() {
-      return dot("set.a.b.c", function() {
-        return dot("get.a.b.c") + " world"
+      return dot.set("a.b.c", function() {
+        return dot.get("a.b.c") + " world"
       })
     })
     .then(function() {
-      expect(dot("get.a.b.c")).toBe("hello world")
+      expect(dot.get("a.b.c")).toBe("hello world")
     })
 })
 
@@ -51,13 +52,13 @@ test("set", function() {
 })
 
 test("store", function() {
-  expect.assertions(1)
+  expect.assertions(2)
 
-  dot.on("store.a.b.c", function(o) {
-    expect(o).toEqual({
-      dot: expect.anything(),
+  dot.on("store.a.b.c", function(arg, opts) {
+    expect(arg).toBe(true)
+    expect(opts).toEqual({
+      dot: dot,
       ns: "store",
-      opt: true,
       prop: "a.b.c",
       propArr: ["a", "b", "c"],
     })

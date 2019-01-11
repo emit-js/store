@@ -24,11 +24,16 @@ module.exports = function store(dot, opts) {
   return dot
 }
 
-function get(o, sig) {
-  var opt = o.opt,
-    propArr = o.propArr
+function argToPropArr(arg, opts) {
+  return arg
+    ? opts.propArr.concat(arg.split("."))
+    : opts.propArr
+}
 
-  propArr = opt ? propArr.concat(opt.split(".")) : propArr
+function get(arg, opts, sig) {
+  var propArr = opts.propArr
+
+  propArr = argToPropArr(arg, opts)
 
   if (propArr) {
     sig.value = dotProp.get(this.store, propArr) || null
@@ -37,32 +42,34 @@ function get(o, sig) {
   }
 }
 
-function set(o) {
-  var opt = o.opt,
-    s = this
+function set(arg, opts) {
+  var s = this
 
-  if (typeof opt === "function") {
+  if (typeof arg === "function") {
     queue = queue.then(function() {
-      var v = opt(o)
-      return setter.call({ o: o, s: s, v: v })
+      return setter.call({ o: opts, s: s, v: arg(opts) })
     })
   } else {
-    var v = o.opt
-    queue = queue.then(setter.bind({ o: o, s: s, v: v }))
+    queue = queue.then(
+      setter.bind({ o: opts, s: s, v: arg })
+    )
   }
 
   return queue
 }
 
 function setter() {
-  var dot = this.o.dot,
-    ns = this.o.ns,
-    prop = this.o.prop,
-    propArr = this.o.propArr,
+  var o = this.o,
     s = this.s,
     v = this.v
 
+  var dot = o.dot,
+    ns = o.ns,
+    prop = o.prop,
+    propArr = o.propArr
+
   if (ns === "delete") {
+    propArr = argToPropArr(v, o)
     s.store = dotProp.delete(s.store, propArr)
   }
 
@@ -74,5 +81,7 @@ function setter() {
     s.store = dotProp.set(s.store, propArr, v)
   }
 
-  return dot("store", prop, v).then(this.o)
+  return dot("store", prop, v).then(function() {
+    return { opts: o, value: v }
+  })
 }
