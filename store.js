@@ -64,20 +64,20 @@ function setter() {
     v = this.v
 
   var dot = o.dot,
-    ns = o.ns,
+    event = o.event,
     prop = o.prop,
     propArr = o.propArr
 
-  if (ns === "delete") {
+  if (event === "delete") {
     propArr = argToPropArr(v, o)
     s.store = dotProp.delete(s.store, propArr)
   }
 
-  if (ns === "merge") {
+  if (event === "merge") {
     s.store = dotProp.merge(s.store, propArr, v)
   }
 
-  if (ns === "set") {
+  if (event === "set") {
     s.store = dotProp.set(s.store, propArr, v)
   }
 

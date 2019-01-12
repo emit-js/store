@@ -58,7 +58,7 @@ test("store", function() {
     expect(arg).toBe(true)
     expect(opts).toEqual({
       dot: dot,
-      ns: "store",
+      event: "store",
       prop: "a.b.c",
       propArr: ["a", "b", "c"],
     })
