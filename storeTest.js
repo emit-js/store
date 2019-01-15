@@ -52,16 +52,17 @@ test("set", function() {
 })
 
 test("store", function() {
-  expect.assertions(2)
+  expect.assertions(1)
 
-  dot.on("store.a.b.c", function(arg, opts) {
-    expect(arg).toBe(true)
-    expect(opts).toEqual({
-      dot: dot,
-      event: "store",
-      prop: "a.b.c",
-      propArr: ["a", "b", "c"],
-    })
+  dot.on("store.a.b.c", function() {
+    var args = Array.prototype.slice.call(arguments)
+    expect(args).toEqual([
+      ["a", "b", "c"],
+      true,
+      dot,
+      "store",
+      {},
+    ])
   })
 
   return dot.set("a.b.c", true)
