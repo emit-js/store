@@ -2,8 +2,7 @@
 /*prettier-ignore*/
 "use strict";
 
-var dotProp = require("./dotPropImmutable"),
-  queue = Promise.resolve()
+var dotProp = require("./dotPropImmutable")
 
 module.exports = function store(dot, opts) {
   if (dot.state.store) {
@@ -12,6 +11,7 @@ module.exports = function store(dot, opts) {
 
   opts = opts || {}
   dot.state.store = opts.state || {}
+  dot.state.storePromise = Promise.resolve()
 
   var boundSet = set.bind(dot.state)
 
@@ -39,7 +39,7 @@ function set(prop, arg, dot, event, sig) {
   var s = this
 
   if (typeof arg === "function") {
-    queue = queue.then(function() {
+    this.storePromise = this.storePromise.then(function() {
       return setter.call({
         d: dot,
         e: event,
@@ -49,7 +49,7 @@ function set(prop, arg, dot, event, sig) {
       })
     })
   } else {
-    queue = queue.then(
+    this.storePromise = this.storePromise.then(
       setter.bind({
         d: dot,
         e: event,
@@ -60,7 +60,7 @@ function set(prop, arg, dot, event, sig) {
     )
   }
 
-  return queue
+  return this.storePromise
 }
 
 function setter() {
