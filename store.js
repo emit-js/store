@@ -5,13 +5,21 @@
 var dotProp = require("./dotPropImmutable")
 
 module.exports = function store(dot, opts) {
-  if (dot.state.store) {
+  var state = dot.state
+
+  if (state.store) {
     return
   }
 
   opts = opts || {}
-  dot.state.store = opts.state || {}
-  dot.state.storePromise = Promise.resolve()
+  state.store = opts.state || {}
+  state.storePromise = Promise.resolve()
+
+  if (state.log) {
+    state.log.levels.store = state.log.levels.store || {
+      info: "debug",
+    }
+  }
 
   var boundSet = set.bind(dot.state)
 
