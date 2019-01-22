@@ -30,7 +30,9 @@ module.exports = function store(dot, opts) {
 }
 
 function argToPropArr(prop, arg) {
-  return arg ? prop.concat(arg.split(".")) : prop
+  return arg
+    ? prop.concat(arg.split ? arg.split(".") : arg)
+    : prop
 }
 
 function get(prop, arg, dot, event, sig) {
