@@ -29,15 +29,7 @@ module.exports = function store(dot, opts) {
   dot.any("set", boundSet)
 }
 
-function argToPropArr(prop, arg) {
-  return arg
-    ? prop.concat(arg.split ? arg.split(".") : arg)
-    : prop
-}
-
 function get(prop, arg, dot, event, sig) {
-  prop = argToPropArr(prop, arg)
-
   if (prop) {
     sig.value = dotProp.get(this.store, prop) || null
   } else {
@@ -81,7 +73,6 @@ function setter() {
     v = this.v
 
   if (e === "delete") {
-    p = argToPropArr(p, v)
     s.store = dotProp.delete(s.store, p)
   }
 
@@ -90,6 +81,9 @@ function setter() {
   }
 
   if (e === "set") {
+    if (!v) {
+      v = p.pop()
+    }
     s.store = dotProp.set(s.store, p, v)
   }
 
