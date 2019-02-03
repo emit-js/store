@@ -23,7 +23,7 @@ module.exports = function store(dot, opts) {
 
   var boundSet = set.bind(dot.state)
 
-  dot.beforeAny("get", get.bind(dot.state))
+  dot.any("get", get.bind(dot.state))
   dot.any("delete", boundSet)
   dot.any("merge", boundSet)
   dot.any("set", boundSet)

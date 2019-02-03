@@ -1,6 +1,6 @@
 {
   "name": "@dot-event/store",
-  "version": "7.0.9",
+  "version": "7.0.10",
   "description": "dot-event store",
   "keywords": [
     "event",
@@ -22,7 +22,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "dot-event": "next2",
+    "dot-event": "3.0.29",
     "eslint": "5.9.0",
     "eslint-config-prettier": "3.3.0",
     "eslint-plugin-prettier": "3.0.0",
