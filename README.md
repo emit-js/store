@@ -29,7 +29,7 @@ dot.delete("prop")
 
 ## Listen to store changes
 
-Use `on` or `any` on the `store` [event id](https://github.com/dot-event/dot-event2#event-id):
+Use [`dot.on`](https://github.com/dot-event/dot-event2#basics) or [`dot.any`](https://github.com/dot-event/dot-event2#any) on the `store` [event id](https://github.com/dot-event/dot-event2#event-id):
 
 ```js
 dot.on("store", "prop", () => {})
