@@ -53,3 +53,7 @@ dot.set("counter", () => (dot.get("counter") || 0) + 1)
 ## Raw state
 
 The raw state object is available at `dot.state.store`.
+
+## Credit
+
+Some of the immutability features were borrowed from [debitoor/dot-prop-immutable](https://github.com/debitoor/dot-prop-immutable).
