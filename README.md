@@ -22,9 +22,16 @@ require("@dot-event/store")(dot)
 ```js
 dot.set("prop", "prop2", "some value")
 dot.get("prop", "prop2") // "some value"
+```
+
+```js
 dot.merge("prop", { prop3: "another value" })
 dot.get("prop") // { prop2: "some value", prop3: "another value" }
+```
+
+```js
 dot.delete("prop")
+dot.get() // {}
 ```
 
 ## Listen to store changes
