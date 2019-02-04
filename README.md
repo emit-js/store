@@ -27,9 +27,13 @@ dot.get("prop") // { prop2: "some value", prop3: "another value" }
 dot.delete("prop")
 ```
 
-## Raw state
+## Listen to store changes
 
-The raw state object is available at `dot.state.store`.
+Use `on` or `any` on the `store` [event id](https://github.com/dot-event/dot-event2#event-id):
+
+```js
+dot.on("store", "prop", () => {})
+```
 
 ## Queued update
 
@@ -38,3 +42,7 @@ Pass a function to `dot.set` for atomic operations:
 ```js
 dot.set("counter", () => (dot.get("counter") || 0) + 1)
 ```
+
+## Raw state
+
+The raw state object is available at `dot.state.store`.
