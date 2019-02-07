@@ -1,6 +1,6 @@
 # @dot-event/store
 
-dot-event immutable store
+[dot-event](https://github.com/dot-event/dot-event2#readme) immutable store
 
 ![that's us](thatsus.png)
 
