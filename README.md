@@ -1,6 +1,6 @@
 # @dot-event/store
 
-[dot-event](https://github.com/dot-event/dot-event2#readme) immutable store
+[dot-event](https://github.com/dot-event/dot-event#readme) immutable store
 
 ![that's us](thatsus.png)
 
@@ -36,7 +36,7 @@ dot.get() // {}
 
 ## Listen to store changes
 
-Use [`dot.on`](https://github.com/dot-event/dot-event2#basics) or [`dot.any`](https://github.com/dot-event/dot-event2#any) on the `store` [event id](https://github.com/dot-event/dot-event2#event-id):
+Use [`dot.on`](https://github.com/dot-event/dot-event#basics) or [`dot.any`](https://github.com/dot-event/dot-event#any) on the `store` [event id](https://github.com/dot-event/dot-event#event-id):
 
 ```js
 dot.on("store", "prop", () => {})
