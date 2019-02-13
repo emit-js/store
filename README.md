@@ -47,7 +47,7 @@ dot.on("store", "prop", () => {})
 Pass a function to `dot.set` for atomic operations:
 
 ```js
-dot.set("counter", () => (dot.get("counter") || 0) + 1)
+dot.set("counter", value => (value || 0) + 1)
 ```
 
 ## Raw state
