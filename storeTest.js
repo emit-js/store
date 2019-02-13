@@ -33,12 +33,11 @@ test("merge", function() {
   )
 })
 
-test("queue", function() {
-  return dot("set", "a", "b", "c", "hello")
-    .then(function() {
-      return dot.set("a", "b", "c", function() {
-        return dot.get("a", "b", "c") + " world"
-      })
+test("queued set", function() {
+  dot.state.store = { a: { b: { c: "hello" } } }
+  return dot
+    .set("a", "b", "c", function(value) {
+      return value + " world"
     })
     .then(function() {
       expect(dot.get("a", "b", "c")).toBe("hello world")

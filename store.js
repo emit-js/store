@@ -32,23 +32,31 @@ module.exports = function store(dot, opts) {
     )
   }
 
-  var boundSet = set.bind(dot.state)
+  var boundGet = get.bind(dot.state),
+    boundSet = set.bind(dot.state)
 
-  dot.any("get", get.bind(dot.state))
+  dot.any("get", boundGet)
   dot.any("delete", boundSet)
   dot.any("merge", boundSet)
   dot.any("set", boundSet)
 }
 
-function get(prop, arg, dot, event, sig) {
-  if (prop) {
-    sig.value = dotProp.get(this.store, prop) || null
+function get(prop) {
+  return getter.call({ p: prop, s: this })
+}
+
+function getter() {
+  var p = this.p,
+    s = this.s
+
+  if (p) {
+    return dotProp.get(s.store, p) || null
   } else {
-    sig.value = this.store
+    return s.store
   }
 }
 
-function set(prop, arg, dot, event, sig) {
+function set(prop, arg, dot, event) {
   var s = this
 
   if (typeof arg === "function") {
@@ -58,7 +66,7 @@ function set(prop, arg, dot, event, sig) {
         e: event,
         p: prop,
         s: s,
-        v: arg(prop, arg, dot, event, sig),
+        v: arg(getter.call({ p: prop, s: s })),
       })
     })
   } else {
