@@ -51,6 +51,12 @@ test("set", function() {
   })
 })
 
+test("set string", function() {
+  return dot.set("a", "b", "c").then(function() {
+    expect(dot.get("a", "b")).toBe("c")
+  })
+})
+
 test("store", function() {
   expect.assertions(1)
 
