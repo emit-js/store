@@ -100,7 +100,7 @@ function setter() {
   }
 
   if (e === "set") {
-    if (!v) {
+    if (typeof v === "undefined") {
       v = p.pop()
     }
     s.store = dotProp.set(s.store, p, v)
