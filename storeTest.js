@@ -1,10 +1,10 @@
 /* eslint-env jest */
 
-var dot = require("dot-event")(),
+var dot,
   store = require("./store")
 
 beforeEach(function() {
-  dot.reset()
+  dot = require("dot-event")()
   store(dot)
 })
 
