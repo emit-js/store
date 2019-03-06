@@ -15,22 +15,9 @@ module.exports = function store(dot, opts) {
   state.store = opts.state || {}
   state.storePromise = Promise.resolve()
 
-  if (state.log) {
-    state.log = Object.assign(
-      {
-        get: {
-          info: "debug",
-        },
-        set: {
-          forceArg: true,
-        },
-        store: {
-          info: "debug",
-        },
-      },
-      state.log
-    )
-  }
+  dot("logLevel", "get", { info: "debug" })
+  dot("logLevel", "set", { forceArg: true })
+  dot("logLevel", "store", { info: "debug" })
 
   var boundGet = get.bind(dot.state),
     boundSet = set.bind(dot.state)
