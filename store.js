@@ -4,16 +4,13 @@
 
 var dotProp = require("./dotPropImmutable")
 
-module.exports = function store(dot, opts) {
-  var state = dot.state
-
-  if (state.store) {
+module.exports = function store(dot, state) {
+  if (dot.get) {
     return
   }
 
-  opts = opts || {}
-  state.store = opts.state || {}
-  state.storePromise = Promise.resolve()
+  dot.state.store = state || {}
+  dot.state.storePromise = Promise.resolve()
 
   dot("logLevel", "get", { info: "debug" })
   dot("logLevel", "set", { forceArg: true })
