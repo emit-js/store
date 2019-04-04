@@ -1,74 +1,73 @@
 /* eslint-env jest */
 
-var dot,
+var emit,
   store = require("./store")
 
 beforeEach(function() {
-  dot = require("dot-event")()
-  store(dot)
+  emit = require("@emit-js/emit")()
+  store(emit)
 })
 
 test("get", function() {
-  dot.state.store = { a: { b: true } }
-  expect(dot("get", "a", "b")).toBe(true)
-  expect(dot.get("a", "b")).toBe(true)
+  emit.state.store = { a: { b: true } }
+  expect(emit("get", "a", "b")).toBe(true)
+  expect(emit.get("a", "b")).toBe(true)
 })
 
 test("delete", function() {
-  return dot
+  return emit
     .set("a", "b", "c", true)
     .then(function() {
-      return dot.delete("a", "b")
+      return emit.delete("a", "b")
     })
     .then(function() {
-      expect(dot.state.store).toEqual({ a: {} })
+      expect(emit.state.store).toEqual({ a: {} })
     })
 })
 
 test("merge", function() {
-  return dot("merge", "a", { b: { c: true } }).then(
+  return emit("merge", "a", { b: { c: true } }).then(
     function() {
-      expect(dot("get", "a", "b", "c")).toBe(true)
+      expect(emit("get", "a", "b", "c")).toBe(true)
     }
   )
 })
 
 test("queued set", function() {
-  dot.state.store = { a: { b: { c: "hello" } } }
-  return dot
+  emit.state.store = { a: { b: { c: "hello" } } }
+  return emit
     .set("a", "b", "c", function(value) {
       return value + " world"
     })
     .then(function() {
-      expect(dot.get("a", "b", "c")).toBe("hello world")
+      expect(emit.get("a", "b", "c")).toBe("hello world")
     })
 })
 
 test("set", function() {
-  return dot.set("a", "b", "c", true).then(function() {
-    expect(dot.get("a", "b", "c")).toBe(true)
+  return emit.set("a", "b", "c", true).then(function() {
+    expect(emit.get("a", "b", "c")).toBe(true)
   })
 })
 
 test("set string", function() {
-  return dot.set("a", "b", "c").then(function() {
-    expect(dot.get("a", "b")).toBe("c")
+  return emit.set("a", "b", "c").then(function() {
+    expect(emit.get("a", "b")).toBe("c")
   })
 })
 
 test("store", function() {
   expect.assertions(1)
 
-  dot.on("store", "a", "b", "c", function() {
+  emit.on("store", "a", "b", "c", function() {
     var args = Array.prototype.slice.call(arguments)
     expect(args).toEqual([
-      ["a", "b", "c"],
       true,
-      dot,
-      "store",
-      {},
+      ["a", "b", "c"],
+      emit,
+      { event: "store" },
     ])
   })
 
-  return dot.set("a", "b", "c", true)
+  return emit.set("a", "b", "c", true)
 })

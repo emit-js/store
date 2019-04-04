@@ -1,19 +1,19 @@
 {
-  "name": "@dot-event/store",
+  "name": "@emit-js/store",
   "version": "7.0.18",
-  "description": "dot-event store",
+  "description": "emit store",
   "keywords": [
     "event",
     "immutable",
     "store"
   ],
-  "author": "dot-event <oss@dot-event.io>",
+  "author": "emit <emit@emit-js.com>",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/dot-event/store.git"
+    "url": "git+ssh://git@github.com/emit-js/store.git"
   },
   "license": "MIT",
-  "homepage": "https://github.com/dot-event/store#readme",
+  "homepage": "https://github.com/emit-js/store#readme",
   "main": "store.js",
   "scripts": {
     "fix": "npm run lint -- --fix",
@@ -22,7 +22,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "dot-event": "3.2.2",
+    "@emit-js/emit": "3.2.3",
     "eslint": "5.16.0",
     "eslint-config-prettier": "4.1.0",
     "eslint-plugin-prettier": "3.0.1",

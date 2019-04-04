@@ -4,28 +4,28 @@
 
 var dotProp = require("./dotPropImmutable")
 
-module.exports = function store(dot, state) {
-  if (dot.get) {
+module.exports = function store(emit, state) {
+  if (emit.get) {
     return
   }
 
-  dot.state.store = state || {}
-  dot.state.storePromise = Promise.resolve()
+  emit.state.store = state || {}
+  emit.state.storePromise = Promise.resolve()
 
-  dot("logLevel", "get", { info: "debug" })
-  dot("logLevel", "set", { forceArg: true })
-  dot("logLevel", "store", { info: "debug" })
+  emit("logLevel", "get", { info: "debug" })
+  emit("logLevel", "set", { forceArg: true })
+  emit("logLevel", "store", { info: "debug" })
 
-  var boundGet = get.bind(dot.state),
-    boundSet = set.bind(dot.state)
+  var boundGet = get.bind(emit.state),
+    boundSet = set.bind(emit.state)
 
-  dot.any("get", boundGet)
-  dot.any("delete", boundSet)
-  dot.any("merge", boundSet)
-  dot.any("set", boundSet)
+  emit.any("get", boundGet)
+  emit.any("delete", boundSet)
+  emit.any("merge", boundSet)
+  emit.any("set", boundSet)
 }
 
-function get(prop) {
+function get(arg, prop) {
   return getter.call({ p: prop, s: this })
 }
 
@@ -40,14 +40,15 @@ function getter() {
   }
 }
 
-function set(prop, arg, dot, event) {
-  var s = this
+function set(arg, prop, emit, signal) {
+  var id = signal.event,
+    s = this
 
   if (typeof arg === "function") {
     this.storePromise = this.storePromise.then(function() {
       return setter.call({
-        d: dot,
-        e: event,
+        e: emit,
+        i: id,
         p: prop,
         s: s,
         v: arg(getter.call({ p: prop, s: s })),
@@ -56,8 +57,8 @@ function set(prop, arg, dot, event) {
   } else {
     this.storePromise = this.storePromise.then(
       setter.bind({
-        d: dot,
-        e: event,
+        e: emit,
+        i: id,
         p: prop,
         s: s,
         v: arg,
@@ -69,28 +70,28 @@ function set(prop, arg, dot, event) {
 }
 
 function setter() {
-  var dot = this.d,
-    e = this.e,
+  var e = this.e,
+    i = this.i,
     p = this.p,
     s = this.s,
     v = this.v
 
-  if (e === "delete") {
+  if (i === "delete") {
     s.store = dotProp.delete(s.store, p)
   }
 
-  if (e === "merge") {
+  if (i === "merge") {
     s.store = dotProp.merge(s.store, p, v)
   }
 
-  if (e === "set") {
+  if (i === "set") {
     if (typeof v === "undefined") {
       v = p.pop()
     }
     s.store = dotProp.set(s.store, p, v)
   }
 
-  return dot("store", p, v).then(function() {
+  return e("store", p, v).then(function() {
     return v
   })
 }
