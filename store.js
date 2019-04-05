@@ -12,21 +12,20 @@ module.exports = function store(emit, state) {
   emit.state.store = state || {}
   emit.state.storePromise = Promise.resolve()
 
-  emit("logLevel", "get", { info: "debug" })
-  emit("logLevel", "set", { forceArg: true })
-  emit("logLevel", "store", { info: "debug" })
-
   var boundGet = get.bind(emit.state),
     boundSet = set.bind(emit.state)
 
-  emit.any("get", boundGet)
-  emit.any("delete", boundSet)
+  emit.any("get", { arg: false, listener: boundGet })
+  emit.any("delete", { arg: false, listener: boundSet })
   emit.any("merge", boundSet)
   emit.any("set", boundSet)
 }
 
 function get(arg, prop) {
-  return getter.call({ p: prop, s: this })
+  return getter.call({
+    p: prop,
+    s: this,
+  })
 }
 
 function getter() {
@@ -85,9 +84,6 @@ function setter() {
   }
 
   if (i === "set") {
-    if (typeof v === "undefined") {
-      v = p.pop()
-    }
     s.store = dotProp.set(s.store, p, v)
   }
 
