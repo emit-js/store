@@ -1,6 +1,6 @@
 {
   "name": "@emit-js/store",
-  "version": "7.0.19",
+  "version": "7.0.20",
   "description": "emit store",
   "keywords": [
     "event",
@@ -22,7 +22,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@emit-js/emit": "3.2.8",
+    "@emit-js/emit": "3.2.9",
     "eslint": "5.16.0",
     "eslint-config-prettier": "4.1.0",
     "eslint-plugin-prettier": "3.0.1",
